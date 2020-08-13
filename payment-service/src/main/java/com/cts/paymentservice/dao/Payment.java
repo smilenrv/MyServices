@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,7 +28,7 @@ import lombok.ToString;
 public class Payment {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	private Integer id;
 
 	private BigDecimal amount;
@@ -42,4 +41,8 @@ public class Payment {
 	@JoinColumn(name = "customer_id")
 	@JsonIgnore
 	private Customer customer;
+	
+	public Integer getCustomerValue() {
+		return this.getCustomer().getId();
+	}
 }

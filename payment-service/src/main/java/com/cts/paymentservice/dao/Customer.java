@@ -3,6 +3,7 @@ package com.cts.paymentservice.dao;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -22,6 +23,7 @@ import lombok.Setter;
 @Builder
 public class Customer {
 	@Id
+	@GeneratedValue
 	private Integer id;
 	private String name;
 	private int age;
