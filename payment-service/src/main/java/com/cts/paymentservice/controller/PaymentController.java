@@ -40,7 +40,7 @@ public class PaymentController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@PostMapping(path = "/{customerId}/payment", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> trackPayment(@ApiParam(required = true, type = "Integer") @PathVariable Integer customerId,
+	public ResponseEntity<Object> trackPayment(@ApiParam(required = true, type = "Integer") @PathVariable Integer customerId,
 			@Valid @RequestBody PaymentRequest request) {
 		log.info("Initiate transaction");
 		return buildResponse(service.initiatePaymentTransaction(customerId, request));
@@ -53,13 +53,13 @@ public class PaymentController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@GetMapping(path = "/{customerId}/payments", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getPayments(
+	public ResponseEntity<Object> getPayments(
 			@ApiParam(required = true, type = "Integer") @PathVariable Integer customerId) {
 		log.info("get payment list");
 		return buildResponse(service.getPayments(customerId));
 	}
 
-	private <T> ResponseEntity<?> buildResponse(T t) {
+	private <T> ResponseEntity<Object> buildResponse(T t) {
 		return ResponseEntity.ok(ApiResponse.builder().code(200).message(HttpStatus.OK.name()).data(t).build());
 	}
 }

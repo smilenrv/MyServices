@@ -35,10 +35,6 @@ public class PaymentServiceImpl implements PaymentService {
 	private static final String CLOSED = "Closed";
 	private static final String FAILURE = "Failure";
 
-	public boolean getCardFallBack1(Integer customerId, PaymentRequest request) {
-		return false;
-	}
-
 	public boolean initiatePaymentTransaction(Integer customerId, PaymentRequest request) {
 		//Validate card & customer valid and available
 		Card card = cardService.getCardOfCustomerUsingCardAPI(customerId, Long.valueOf(request.getCardNumber()));
@@ -59,7 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
 		/**
 		 * Below not required as h2 made as application wise
 		 */
-		//dao.doCustomerCardPersistInPaymentSession(card);
+		/** dao.doCustomerCardPersistInPaymentSession(card); */
 
 		switch (request.getStatus().getValue()) {
 		case OPEN:

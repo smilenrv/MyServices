@@ -3,6 +3,7 @@ package com.cts.paymentservice.util;
 import java.io.IOException;
 import java.io.StringReader;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,7 +34,7 @@ public class UtilityService {
 
 	public String getServiceUrl(String svc) {
 		ServiceInstance serviceInstance = loadBalancer.choose(svc);
-		String baseUrl = serviceInstance.getUri().toString();;
+		String baseUrl = serviceInstance.getUri().toString();
 		log.info("baseUrl - "+baseUrl);
 		return baseUrl;
 	}
@@ -43,20 +44,21 @@ public class UtilityService {
 			HttpClientErrorException ex = (HttpClientErrorException) e;
 			if (HttpStatus.EXPECTATION_FAILED == ex.getStatusCode()) {
 				String errorMsg = ex.getResponseBodyAsString();
-				DocumentBuilder builder;
 				try {
-					builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+					DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
+					df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, ""); // Compliant
+					df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, ""); // c7ompliant
+					DocumentBuilder builder = df.newDocumentBuilder();
 					InputSource src = new InputSource();
 					src.setCharacterStream(new StringReader(errorMsg));
 
 					Document doc = builder.parse(src);
 					String msg = doc.getElementsByTagName("errorMessage").item(0).getTextContent();
-					if(StringUtils.isNotBlank(msg)) {
+					if (StringUtils.isNotBlank(msg)) {
 						errorMsg = msg;
 					}
 				} catch (ParserConfigurationException | SAXException | IOException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
+					log.error("Error occured ", e2);
 				}
 				throw new PaymentServiceException(errorMsg);
 			}

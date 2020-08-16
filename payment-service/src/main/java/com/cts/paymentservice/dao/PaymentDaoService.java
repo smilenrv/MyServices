@@ -29,12 +29,15 @@ public class PaymentDaoService {
 		if (null == paymentList || paymentList.isEmpty()) {
 			return true;
 		}
-		return !paymentList.stream().anyMatch(e -> e.getStatus().equalsIgnoreCase("Open"));
+		return paymentList.stream().noneMatch(e -> e.getStatus().equalsIgnoreCase("Open"));
 	}
 
 	public List<Payment> getCustomerPayment(Integer customerId) {
 		return paymentRepo.findByCustomerId(customerId);
-		//return customerRepo.findById(customerId).map(e -> e.getPayments()).orElse(Collections.emptyList());
+		/**
+		 * return customerRepo.findById(customerId).map(e ->
+		 * e.getPayments()).orElse(Collections.emptyList());
+		 */
 	}
 
 	public Customer getCustomer(Integer customerId) {

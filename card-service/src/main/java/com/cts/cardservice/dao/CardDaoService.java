@@ -1,5 +1,6 @@
 package com.cts.cardservice.dao;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -23,7 +24,8 @@ public class CardDaoService {
 	}
 
 	public List<Card> getCustomerCards(Integer customerId) {
-		return repository.findByCustomer_Id(customerId);		
+		//return repository.findByCustomer_Id(customerId);
+		return customerRepo.findById(customerId).map(Customer::getCards).orElse(Collections.emptyList());
 	}
 
 	public Customer getCustomer(Integer customerId) {

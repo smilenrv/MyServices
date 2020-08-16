@@ -41,8 +41,8 @@ class CardDaoServiceTest {
 
 	@Test
 	void test_fetch_customer_Cards() {
-		when(repository.findByCustomer_Id(Mockito.anyInt())).thenReturn(
-				Arrays.asList(Card.builder().cardNumber(1234L).build(), Card.builder().cardNumber(123456L).build()));
+		when(customerRepo.findById(Mockito.anyInt())).thenReturn(java.util.Optional.of(Customer.builder().cards(
+				Arrays.asList(Card.builder().cardNumber(1234L).build(), Card.builder().cardNumber(123456L).build())).build()));
 		List<Card> cardList = dao.getCustomerCards(1);
 		assertThat(cardList).isNotEmpty();
 		assertThat(cardList.size()).isEqualTo(2);
@@ -60,9 +60,8 @@ class CardDaoServiceTest {
 
 	@Test
 	void test_save_update_card() {
-		when(repository.findByCustomer_Id(Mockito.anyInt())).thenReturn(
-				Arrays.asList(Card.builder().cardNumber(1234L).customer(Customer.builder().id(1).build()).build(),
-						Card.builder().cardNumber(123456L).customer(Customer.builder().id(1).build()).build()));
+		when(customerRepo.findById(Mockito.anyInt())).thenReturn(java.util.Optional.of(Customer.builder().id(1).cards(
+				Arrays.asList(Card.builder().cardNumber(1234L).build(), Card.builder().cardNumber(123456L).build())).build()));
 		boolean saved = dao
 				.saveOrUpdateCard(Card.builder().cardNumber(123L).customer(Customer.builder().id(1).build()).build());
 		assertThat(saved).isTrue();
@@ -70,7 +69,7 @@ class CardDaoServiceTest {
 	
 	@Test
 	void test_save_update_card_empty() {
-		when(repository.findByCustomer_Id(Mockito.anyInt())).thenReturn(Collections.emptyList());
+		when(customerRepo.findById(Mockito.anyInt())).thenReturn(java.util.Optional.of(Customer.builder().id(1).cards(Collections.emptyList()).build()));
 		boolean saved = dao
 				.saveOrUpdateCard(Card.builder().cardNumber(123L).customer(Customer.builder().id(1).build()).build());
 		assertThat(saved).isTrue();
@@ -78,7 +77,7 @@ class CardDaoServiceTest {
 	
 	@Test
 	void test_save_update_card_null() {
-		when(repository.findByCustomer_Id(Mockito.anyInt())).thenReturn(null);
+		when(customerRepo.findById(Mockito.anyInt())).thenReturn(java.util.Optional.of(Customer.builder().id(1).cards(null).build()));
 		boolean saved = dao
 				.saveOrUpdateCard(Card.builder().cardNumber(123L).customer(Customer.builder().id(1).build()).build());
 		assertThat(saved).isTrue();

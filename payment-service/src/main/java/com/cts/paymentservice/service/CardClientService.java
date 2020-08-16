@@ -1,5 +1,6 @@
 package com.cts.paymentservice.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -17,15 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-@RibbonClient(name="card-service")
+@RibbonClient(name = "card-service")
 public class CardClientService {
 
 	private RestTemplate restTemplate;
 	private PaymentPropConfig prop;
 	private UtilityService util;
 
-	public CardClientService(PaymentPropConfig prop, UtilityService util) {
-		this.restTemplate = new RestTemplate();
+	public CardClientService(PaymentPropConfig prop, UtilityService util, @Qualifier(value = "restTemplate") RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
 		this.prop = prop;
 		this.util = util;
 	}
@@ -40,10 +41,11 @@ public class CardClientService {
 				null, new ParameterizedTypeReference<ApiResponse<Card>>() {
 				}, customerId, cardNumber).getBody();
 		log.info("Get customer API Response {}", response);
-		return (Card) response.getData();
+		return response.getData();
 	}
 
 	public Card getCardFallBack(Integer customerId, Long cardNumber, Throwable e) {
+		log.info("Card Number {0} - {1}", cardNumber, customerId );
 		log.info("Error in fetching card details from card API" + e);
 		util.parseExceptionAndThrowIfExists(e);
 		throw new PaymentServiceException(prop.getCardApiNotAvailable());
