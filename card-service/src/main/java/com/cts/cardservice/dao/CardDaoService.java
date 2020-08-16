@@ -24,7 +24,7 @@ public class CardDaoService {
 	}
 
 	public List<Card> getCustomerCards(Integer customerId) {
-		//return repository.findByCustomer_Id(customerId);
+		/**return repository.findByCustomer_Id(customerId);*/
 		return customerRepo.findById(customerId).map(Customer::getCards).orElse(Collections.emptyList());
 	}
 
