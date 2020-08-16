@@ -15,7 +15,7 @@ public class ApiResponse <T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int code;
 	private String message;
-	private T data;
+	private transient T data;
 	private boolean hasError;
 	private String errorMessage;
 

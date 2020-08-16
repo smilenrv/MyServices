@@ -39,7 +39,7 @@ public class CustomerController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@GetMapping(path = "/customers", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getCustomers() {
+	public ResponseEntity<Object> getCustomers() {
 		List<Customer> customers = service.getAllCustomers();
 		return buildResponse(customers);
 	}
@@ -51,7 +51,7 @@ public class CustomerController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@GetMapping(path = "/customers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getCustomerDetail(@ApiParam(required = true, type = "Integer") @PathVariable int id) {
+	public ResponseEntity<Object> getCustomerDetail(@ApiParam(required = true, type = "Integer") @PathVariable int id) {
 		Customer customer = service.getCustomer(id);
 		return buildResponse(customer);
 	}
@@ -63,7 +63,7 @@ public class CustomerController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@PostMapping(path = "/customer", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> createCustomer(
+	public ResponseEntity<Object> createCustomer(
 			@ApiParam(required = true, type = "json", value = "Customer json - Name, Age, Address, Phone, Email Address") @Valid @RequestBody CustomerRequest request) {
 		return buildResponse(service.createOrUpdateCustomer(request, null));
 	}
@@ -75,12 +75,12 @@ public class CustomerController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@PostMapping(path = "/customer/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updateCustomer(@ApiParam(required = true, type = "Integer") @PathVariable Integer id,
+	public ResponseEntity<Object> updateCustomer(@ApiParam(required = true, type = "Integer") @PathVariable Integer id,
 			@Valid @RequestBody CustomerRequest request) {
 		return buildResponse(service.createOrUpdateCustomer(request, id));
 	}
 
-	private <T> ResponseEntity<?> buildResponse(T t) {
+	private <T> ResponseEntity<Object> buildResponse(T t) {
 		return ResponseEntity.ok(ApiResponse.builder().code(200).message(HttpStatus.OK.name()).data(t).build());
 	}
 }

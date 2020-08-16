@@ -61,7 +61,7 @@ public class CardServiceImpl implements CardService {
 		 */
 		log.info("customer now exists in card api");
 		dao.saveOrUpdateCard(
-				Card.builder().cardNumber(Long.valueOf(cardId)).cardType(card.getCardType().getValue())
+				Card.builder().cardNumber(cardId).cardType(card.getCardType().getValue())
 						.expirationDate(card.getExpirationDate()).customer(customer).build());
 		return true;
 	}

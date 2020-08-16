@@ -2,7 +2,6 @@ package com.cts.customerservice.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,12 +17,15 @@ import com.cts.customerservice.model.ApiResponse;
 @ControllerAdvice
 public class CustomerExceptionHandler {
 
-	@Autowired
 	private CustomerConfig prop;
+	
+	public CustomerExceptionHandler(CustomerConfig prop) {
+		this.prop = prop;
+	}
 
 	@ResponseBody
 	@ExceptionHandler(CustomerNotFoundException.class)
-	public ResponseEntity<?> handleException(CustomerNotFoundException ex) {
+	public ResponseEntity<Object> handleException(CustomerNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
 				.body(ApiResponse.builder().code(HttpStatus.EXPECTATION_FAILED.value()).hasError(true)
 						.errorMessage(ex.getMessage()).message(HttpStatus.EXPECTATION_FAILED.name()).build());
@@ -31,7 +33,7 @@ public class CustomerExceptionHandler {
 
 	@ResponseBody
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<?> handleException(Exception ex) {
+	public ResponseEntity<Object> handleException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body(ApiResponse.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value()).hasError(true)
 						.errorMessage(ex.getMessage()).message(HttpStatus.INTERNAL_SERVER_ERROR.name()).build());
@@ -39,7 +41,7 @@ public class CustomerExceptionHandler {
 
 	@ResponseBody
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+	public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpServletRequest request) {
 		StringBuilder sb = new StringBuilder("");
 		for (FieldError error : ex.getBindingResult().getFieldErrors()) {

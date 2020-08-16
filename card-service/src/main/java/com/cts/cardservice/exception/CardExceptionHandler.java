@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -23,12 +22,15 @@ import com.cts.cardservice.model.ApiResponse;
 @ResponseBody
 public class CardExceptionHandler {
 
-	@Autowired
 	private CardPropConfig prop;
+
+	public CardExceptionHandler(CardPropConfig prop) {
+		this.prop = prop;
+	}
 
 	@ExceptionHandler(CardServiceException.class)
 	@ResponseBody
-	public ResponseEntity<?> handleException(CardServiceException ex) {
+	public ResponseEntity<Object> handleException(CardServiceException ex) {
 		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
 				.body(ApiResponse.builder().code(HttpStatus.EXPECTATION_FAILED.value()).hasError(true)
 						.errorMessage(ex.getMessage()).message(HttpStatus.EXPECTATION_FAILED.name()).build());
@@ -36,7 +38,7 @@ public class CardExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
-	public ResponseEntity<?> handleException(Exception ex) {
+	public ResponseEntity<Object> handleException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body(ApiResponse.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value()).hasError(true)
 						.errorMessage(ex.getMessage()).message(HttpStatus.INTERNAL_SERVER_ERROR.name()).build());
@@ -44,7 +46,7 @@ public class CardExceptionHandler {
 
 	@ExceptionHandler(HttpClientErrorException.class)
 	@ResponseBody
-	public ResponseEntity<?> handleHttpClientErrorException(HttpClientErrorException ex) {
+	public ResponseEntity<Object> handleHttpClientErrorException(HttpClientErrorException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(ApiResponse.builder().code(HttpStatus.BAD_REQUEST.value()).hasError(true)
 						.errorMessage("Error occurred while fetching Customer API : " + ex.getMessage())
@@ -53,7 +55,7 @@ public class CardExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseBody
-	public ResponseEntity<?> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+	public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpServletRequest request) {
 		StringBuilder sb = new StringBuilder("");
 		for (FieldError error : ex.getBindingResult().getFieldErrors()) {

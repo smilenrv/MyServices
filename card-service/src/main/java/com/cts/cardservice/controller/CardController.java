@@ -44,7 +44,7 @@ public class CardController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@GetMapping(path = "/cards", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getCards() {
+	public ResponseEntity<Object> getCards() {
 		List<Card> customers = service.getAllCardsUsingCustomersAPI();
 		return buildResponse(customers);
 	}
@@ -56,7 +56,7 @@ public class CardController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@GetMapping(path = "/{customerId}/cards", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getCardsOfCustomer(
+	public ResponseEntity<Object> getCardsOfCustomer(
 			@ApiParam(required = true, type = "Integer") @PathVariable int customerId) {
 		List<Card> cards = service.getAllCardsUsingCustomerAPI(customerId);
 		log.info(" " + cards);
@@ -70,7 +70,7 @@ public class CardController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@GetMapping(path = "/{customerId}/cards/{cardNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getCardOfCustomer(
+	public ResponseEntity<Object> getCardOfCustomer(
 			@ApiParam(required = true, type = "Integer") @PathVariable int customerId,
 			@ApiParam(required = true, type = "Long") @Pattern(regexp = "^[0-9]{16}$", message = "card.number.notvalid") @PathVariable String cardNumber) {
 		Card card = service.getCardOfCustomer(customerId, Long.valueOf(cardNumber));
@@ -85,14 +85,14 @@ public class CardController {
 			@io.swagger.annotations.ApiResponse(code = 417, message = "Expectation failed"),
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable entity"), })
 	@PostMapping(path = "/{customerId}/card/{cardNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> createOrUpdateCard(
+	public ResponseEntity<Object> createOrUpdateCard(
 			@ApiParam(required = true, type = "Integer") @PathVariable Integer customerId,
 			@ApiParam(required = true, type = "String") @PathVariable @Pattern(regexp = "^[0-9]{16}$", message = "card.number.notvalid") String cardNumber,
 			@Valid @RequestBody CardRequest request) {
 		return buildResponse(service.saveOrUpdate(request, customerId, Long.valueOf(cardNumber)));
 	}
 
-	private <T> ResponseEntity<?> buildResponse(T t) {
+	private <T> ResponseEntity<Object> buildResponse(T t) {
 		return ResponseEntity.ok(ApiResponse.builder().code(200).message(HttpStatus.OK.name()).data(t).build());
 	}
 }

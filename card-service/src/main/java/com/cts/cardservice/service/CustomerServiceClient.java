@@ -3,6 +3,7 @@ package com.cts.cardservice.service;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -27,8 +28,8 @@ public class CustomerServiceClient {
 	private CardPropConfig prop;
 	private UtilityService util;
 
-	public CustomerServiceClient(CardPropConfig prop, UtilityService util) {
-		this.restTemplate = new RestTemplate();
+	public CustomerServiceClient(CardPropConfig prop, UtilityService util, @Qualifier(value = "restTemplate") RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
 		this.prop = prop;
 		this.util = util;
 	}
@@ -51,7 +52,7 @@ public class CustomerServiceClient {
 				HttpMethod.GET, null, new ParameterizedTypeReference<ApiResponse<Customer>>() {
 				}, customerId).getBody();
 		log.info("Get customer API Response {}", response);
-		return (Customer) response.getData();
+		return response.getData();
 	}
 
 	public List<Customer> getCustomersFallBack(Throwable e) {
@@ -61,7 +62,7 @@ public class CustomerServiceClient {
 	}
 
 	public Customer getCustomerFallBack(Integer customerId, Throwable e) {
-		log.info("Error in fetching customer details from customer API");
+		log.info("Error in fetching customer details from customer API {}", customerId);
 		util.parseExceptionAndThrowIfExists(e);
 		throw new CardServiceException(prop.getCustomerApiNotAvailable());
 	}

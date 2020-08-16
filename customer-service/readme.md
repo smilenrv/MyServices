@@ -73,3 +73,6 @@ If ID exists:
 If ID not exists:
 {"code":417,"message":"EXPECTATION_FAILED","data":"Customer is not present"}
 ```
+
+# sonar
+mvn sonar:sonar -Dsonar.host.url=http://localhost:9000

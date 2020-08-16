@@ -23,8 +23,7 @@ public class CardDaoService {
 	}
 
 	public List<Card> getCustomerCards(Integer customerId) {
-		return repository.findByCustomer_Id(customerId);
-		//return customerRepo.findById(customerId).map(e -> e.getCards()).orElse(Collections.emptyList());
+		return repository.findByCustomer_Id(customerId);		
 	}
 
 	public Customer getCustomer(Integer customerId) {
@@ -40,7 +39,7 @@ public class CardDaoService {
 		if (cardList != null && !cardList.isEmpty()) {
 			log.info("Fetch the existing card and set the id into new object");
 			Integer id = cardList.stream().filter(e -> card.getCardNumber().equals(e.getCardNumber()))
-					.map(e -> e.getId()).findAny().orElse(null);
+					.map(Card::getId).findAny().orElse(null);
 			card.setId(id);
 		}
 		repository.save(card);

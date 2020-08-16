@@ -24,7 +24,7 @@ public class DateValidator implements ConstraintValidator<DateConstraint, String
 
 	@Override
 	public boolean isValid(String customDateField, ConstraintValidatorContext cxt) {
-		if (null == customDateField) {
+		if (null == customDateField || null == dateFormat) {
 			return false;
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);

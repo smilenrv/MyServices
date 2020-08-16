@@ -24,17 +24,15 @@ public class SwaggerConfig {
 
 	ApiInfo apiInfo = new ApiInfo("Card API", "To fetch card details", "1.0", null, contact, null, null, Collections.emptyList());
 
-	private static final Set<String> DEFAULT_PRODUCES_AND_CONSUMES = new HashSet<String>(
+	private static final Set<String> DEFAULT_PRODUCES_AND_CONSUMES = new HashSet<>(
 			Arrays.asList("application/json", "application/xml"));
 
 	@Bean
 	public Docket api() {
 
-		Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo).produces(DEFAULT_PRODUCES_AND_CONSUMES)
+		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo).produces(DEFAULT_PRODUCES_AND_CONSUMES)
 				.consumes(DEFAULT_PRODUCES_AND_CONSUMES).select()
 				.apis(RequestHandlerSelectors.basePackage("com.cts.cardservice")).paths(PathSelectors.any())
 				.build();
-
-		return docket;
 	}
 }
